@@ -45,7 +45,8 @@ class Model():
                                         [args.rnn_size, args.vocab_size])
             softmax_b = tf.get_variable("softmax_b", [args.vocab_size])
 
-        embedding = tf.get_variable("embedding", [args.vocab_size, args.rnn_size])
+        embedding = tf.get_variable(
+            "embedding", [args.vocab_size, args.rnn_size])
         inputs = tf.nn.embedding_lookup(embedding, self.input_data)
 
         # dropout beta testing: double check which one should affect next line
@@ -60,16 +61,16 @@ class Model():
             prev_symbol = tf.stop_gradient(tf.argmax(prev, 1))
             return tf.nn.embedding_lookup(embedding, prev_symbol)
 
-        outputs, last_state = legacy_seq2seq.rnn_decoder(inputs, self.initial_state, cell, loop_function=loop if not training else None, scope='rnnlm')
+        outputs, last_state = legacy_seq2seq.rnn_decoder(
+            inputs, self.initial_state, cell, loop_function=loop if not training else None, scope='rnnlm')
         output = tf.reshape(tf.concat(outputs, 1), [-1, args.rnn_size])
-
 
         self.logits = tf.matmul(output, softmax_w) + softmax_b
         self.probs = tf.nn.softmax(self.logits)
         loss = legacy_seq2seq.sequence_loss_by_example(
-                [self.logits],
-                [tf.reshape(self.targets, [-1])],
-                [tf.ones([args.batch_size * args.seq_length])])
+            [self.logits],
+            [tf.reshape(self.targets, [-1])],
+            [tf.ones([args.batch_size * args.seq_length])])
         self.cost = tf.reduce_sum(loss) / args.batch_size / args.seq_length
         with tf.name_scope('cost'):
             self.cost = tf.reduce_sum(loss) / args.batch_size / args.seq_length
@@ -77,7 +78,7 @@ class Model():
         self.lr = tf.Variable(0.0, trainable=False)
         tvars = tf.trainable_variables()
         grads, _ = tf.clip_by_global_norm(tf.gradients(self.cost, tvars),
-                args.grad_clip)
+                                          args.grad_clip)
         with tf.name_scope('optimizer'):
             optimizer = tf.train.AdamOptimizer(self.lr)
         self.train_op = optimizer.apply_gradients(zip(grads, tvars))
@@ -98,7 +99,7 @@ class Model():
         def weighted_pick(weights):
             t = np.cumsum(weights)
             s = np.sum(weights)
-            return(int(np.searchsorted(t, np.random.rand(1)*s)))
+            return(int(np.searchsorted(t, np.random.rand(1) * s)))
 
         ret = prime
         char = prime[-1]

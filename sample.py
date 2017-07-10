@@ -12,7 +12,7 @@ from six import text_type
 
 def main():
     parser = argparse.ArgumentParser(
-                       formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--save_dir', type=str, default='save',
                         help='model directory to store checkpointed models')
     parser.add_argument('-n', type=int, default=3000,
@@ -41,6 +41,7 @@ def sample(args):
             saver.restore(sess, ckpt.model_checkpoint_path)
             print(model.sample(sess, chars, vocab, args.n, args.prime,
                                args.sample))
+
 
 if __name__ == '__main__':
     main()

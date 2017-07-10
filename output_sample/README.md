@@ -1,0 +1,1 @@
+**ALL lyrics come from autolyrics (internets)**

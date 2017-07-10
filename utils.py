@@ -56,7 +56,8 @@ class TextLoader():
         if self.num_batches == 0:
             assert False, "Not enough data. Make seq_length and batch_size small."
 
-        self.tensor = self.tensor[:self.num_batches * self.batch_size * self.seq_length]
+        self.tensor = self.tensor[:self.num_batches *
+                                  self.batch_size * self.seq_length]
         xdata = self.tensor
         ydata = np.copy(self.tensor)
         ydata[:-1] = xdata[1:]
